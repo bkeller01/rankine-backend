@@ -47,23 +47,25 @@ def solve():
         }
         
         # Parse the using properties to get property type and value
-        # Format: "state3-P" -> extract property 'P' from state 3
+        # Format from frontend: [{id: "state3-P", value: "10 MPa"}, ...]
         using_props_parsed = []
-        for prop_id in using_properties:
+        for prop_obj in using_properties:
+            prop_id = prop_obj.get('id') if isinstance(prop_obj, dict) else prop_obj
             parts = prop_id.split('-')
             prop_name = parts[1]  # e.g., 'P', 'T', 'h', 's', 'x'
             coolprop_name = coolprop_map.get(prop_name, prop_name)
             
-            # For now, we'll get the value from the given values
-            # This will be passed from frontend in the next step
             using_props_parsed.append({
                 'name': coolprop_name,
-                'prop_id': prop_id
+                'prop_id': prop_id,
+                'value': prop_obj.get('value') if isinstance(prop_obj, dict) else None
             })
         
         # Parse the find properties
+        # Format from frontend: [{id: "state3-h"}, ...]
         find_props_parsed = []
-        for prop_id in find_properties:
+        for prop_obj in find_properties:
+            prop_id = prop_obj.get('id') if isinstance(prop_obj, dict) else prop_obj
             parts = prop_id.split('-')
             prop_name = parts[1]
             coolprop_name = coolprop_map.get(prop_name, prop_name)
