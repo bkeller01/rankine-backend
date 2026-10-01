@@ -109,6 +109,10 @@ def solve():
         state = data.get('state')
         find_properties = data.get('findProperties', [])
         using_properties = data.get('usingProperties', [])
+        # Which fluid to solve with. The worked example never sends this (always
+        # water); open-ended runs send whatever the student picked on the given-
+        # values form. Defaulting to 'Water' keeps old requests working unchanged.
+        fluid = data.get('fluid') or 'Water'
         
         if len(using_properties) < 2:
             return jsonify({
@@ -195,7 +199,7 @@ def solve():
                     prop_to_find,
                     prop1_name, prop1_value,
                     prop2_name, prop2_value,
-                    'Water'  # Working fluid
+                    fluid
                 )
                 
                 # Format the result for display
